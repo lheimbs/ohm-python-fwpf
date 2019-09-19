@@ -6,7 +6,7 @@ class Shape:
         self.id = Shape.id
         Shape.id += 1
 
-    def draw(self, Painter):
+    def draw(self, painter):
         return (x0, y0, w, h)
 
     def moveBy(self, dx, dy):
@@ -19,10 +19,11 @@ class Group(Shape):
     def __init__(self):
         self.objs = []
 
-    def draw(self, Painter):
-        print(f"group: id #{self.id:d} num_shapes={len(self.objs):d}")
+    def draw(self, painter):
+        if painter is None:
+            print(f"group: id #{self.id:d} num_shapes={len(self.objs):d}")
         for obj in self.objs:
-            obj.draw(Painter)
+            obj.draw(painter)
 
     def moveBy(self, dx, dy):
         for obj in self.objs:
@@ -40,12 +41,16 @@ class Rect(Shape):
         super().__init__()
         self.start = [x0, y0]
         self.size   = [w, h]
+
+    def moveBy(self, dx, dy):
+        self.start[0] += dx
+        self.start[1] += dy
     
     def draw(self, painter):
-        print(f"rect: id #{self.id:d} x={self.start[0]:d}, y={self.start[1]:d}, w={self.size[0]:d}, h={self.size[1]:d}")
-
-        if painter is not None:
-            painter.drawLine(*self.start,*self.size)
+        if painter is None:
+            print(f"rect: id #{self.id:d} x={self.start[0]:d}, y={self.start[1]:d}, w={self.size[0]:d}, h={self.size[1]:d}")
+        else:
+            painter.drawRect(*self.start,*self.size)
 
 
 class Line(Shape):
@@ -55,10 +60,10 @@ class Line(Shape):
         self.size   = [x1, y1]
 
     def draw(self, painter):
-        print(f"line: id #{self.id:d} x={self.start[0]:d}, y={self.start[1]:d}, w={self.size[0]:d}, h={self.size[1]:d}")
-
-        if painter is not None:
-            painter.drawRect(*self.start,*self.size)
+        if painter is None:
+            print(f"line: id #{self.id:d} x={self.start[0]:d}, y={self.start[1]:d}, w={self.size[0]:d}, h={self.size[1]:d}")
+        else:
+            painter.drawLine(*self.start,*self.size)
 
 
 if __name__ == "__main__":
